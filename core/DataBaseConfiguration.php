@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Core;
 class DataBaseConfiguration {
     private $host;
     private $db_name;

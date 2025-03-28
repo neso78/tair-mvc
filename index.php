@@ -1,19 +1,20 @@
 <?php
-require_once 'DataBaseConfiguration.php';
-require_once 'DatabaseConnection.php';
+
+require_once 'vendor/autoload.php';
+
+use App\Core\DataBaseConfiguration;
+use App\Core\DatabaseConnection;
+use App\Models\RadnjaModel;
+use App\Models\StatusservisaModel;
 
 // 1. Kreiraj objekat klase DataBaseConfiguration sa podacima za bazu
-$dbConfig = new DataBaseConfiguration('localhost', 'popis_bg', 'root', '');
+$dbConfig = new DataBaseConfiguration('localhost', 'servis_app', 'root', '');
 
-// 2. Kreiraj instancu DatabaseConnection koristeći getInstance
+
 $dbConnection = DatabaseConnection::getInstance($dbConfig);
 
-// 3. Dobij PDO konekciju
-$prep = $dbConnection->getConnection()->prepare('SELECT * FROM artikli');
+$radnja = new RadnjaModel($dbConnection);
 
-$res = $prep->execute();
+$status = new StatusservisaModel( $dbConnection);
 
-if ($res) {
-    $artikli = $prep->fetchAll(PDO::FETCH_ASSOC);
-}
-var_dump($artikli);
+var_dump($status->getAll());  

@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Core;
 class DatabaseConnection {
     private static $instance = null;  // Singleton instanca
     private $conn;                    // PDO objekat za konekciju
@@ -15,14 +15,14 @@ class DatabaseConnection {
     private function connect() {
         try {
             // Povezivanje sa bazom koristeći podatke iz DataBaseConfiguration
-            $this->conn = new PDO(
+            $this->conn = new \PDO(
                 $this->dbConfig->getSource(),
                 $this->dbConfig->getUser(),
                 $this->dbConfig->getPass()
             );
             // Postavi UTF-8 kao podrazumevani karakter set
             $this->conn->exec("set names utf8");
-        } catch (PDOException $exception) {
+        } catch (\PDOException $exception) {
             // Ako dođe do greške, ispiši grešku u JSON formatu
             http_response_code(500); // Internal server error
             echo json_encode([

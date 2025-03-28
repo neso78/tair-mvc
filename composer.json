@@ -1,0 +1,16 @@
+{
+    "name": "neso7/tair-mvc",
+    "type": "project",
+    "authors": [
+        {
+            "name": "neso",
+            "email": "neso7878@example.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\" : ""
+        }
+    },
+    "require": {}
+}
