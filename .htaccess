@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /tair-mvc/
+
+# Ako traženi fajl ili direktorijum postoji, preskoči pravilo
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Sve ostalo preusmeri na index.php
+RewriteRule ^(.*)$ index.php?URL=$1 [L]
