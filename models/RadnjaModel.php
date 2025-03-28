@@ -3,7 +3,7 @@ namespace App\Models;
 
 use App\Core\DatabaseConnection;
 class RadnjaModel {
-    private $conn;  // PDO objekat za konekciju
+    private  $pdo ;  // PDO objekat za konekciju
     private $id;
     private $naziv;
     private $adresa;
@@ -12,7 +12,7 @@ class RadnjaModel {
     // Konstruktor prima DatabaseConnection objekat
     public function __construct(DatabaseConnection $dbConnection) {
         // Spremamo PDO konekciju
-        $this->conn = $dbConnection->getConnection();
+        $this->pdo = $dbConnection->getConnection();
     }
 
     // Metoda za postavljanje ID-a
@@ -29,7 +29,7 @@ class RadnjaModel {
         $query = "SELECT * FROM radnje WHERE id = :id";
 
         // Pripremi PDO upit
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->pdo->prepare($query);
 
         // Bind parametar :id na vrednost $id
         $stmt->bindParam(':id', $this->id, \PDO::PARAM_INT);
@@ -58,33 +58,18 @@ class RadnjaModel {
      // Metoda za dobijanje svih radnji
      public function getAll(): array {
         $query = "SELECT * FROM radnje";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        // Uzimamo sve rezultate kao objekat
-        $radnjeData = $stmt->fetchAll(\PDO::FETCH_OBJ);
-
-        // Kreiramo niz objekata RadnjaModel
-        $radnje = [];
-
-        foreach ($radnjeData as $radnjaDataItem) {
-            $this->setId($radnjaDataItem->id);
-            $this->naziv = $radnjaDataItem->naziv;
-            $this->adresa = $radnjaDataItem->adresa;
-            $this->telefon = $radnjaDataItem->telefon;
-            
-            // Dodajemo objekat u niz
-            $radnje[] = $this;
+        $stmt = $this->pdo->prepare($query);
+        if ($stmt->execute()) {
+            return $stmt->fetchAll(\PDO::FETCH_OBJ) ?: [];
         }
-
-        return $radnje;
+        return [];
     }
 
         // Metoda za dobijanje radnje prema nazivu (pretraga)
         public function getByName($naziv): array {
             // Pripremi SQL upit za pretragu po nazivu
             $query = "SELECT * FROM radnje WHERE naziv LIKE :naziv";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $this->pdo->prepare($query);
     
             // Bind parametar :naziv sa vrednošću unetog naziva, sa % za delimično podudaranje
             $naziv = "%" . $naziv . "%"; // dodajemo % na početak i kraj za delimično podudaranje

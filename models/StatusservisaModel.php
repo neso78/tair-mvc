@@ -27,23 +27,13 @@ class StatusservisaModel {
 
     public function getAll(): array {
         $query = "SELECT * FROM status_servisa";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        // Uzimamo sve rezultate kao objekat
-        $statusServisa = $stmt->fetchAll(\PDO::FETCH_OBJ);
-
-        // Kreiramo niz objekata RadnjaModel
-        $radnje = [];
-
-        foreach ($statusServisa as $statusServisaDataItem) {
-            $this->setId($statusServisaDataItem->id);
-            $this->naziv = $statusServisaDataItem->naziv;          
-            // Dodajemo objekat u niz
-            $radnje[] = $this;
+        $prep = $this->conn->prepare($query);
+        
+        if ($prep->execute()) {
+            return $prep->fetchAll(\PDO::FETCH_OBJ) ?: [];
         }
-
-        return $radnje;
+        
+        return [];
     }
 
     // Metoda za dobijanje podataka o statusu servisa prema ID-u
